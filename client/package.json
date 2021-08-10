@@ -1,5 +1,6 @@
 {
   "name": "feddupnew",
+  "homepage": "http://saisashreek5thdt.github.io/feddupnew_api",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,8 +16,10 @@
   },
   "scripts": {
     "start": "craco start",
-     "build": "craco build",
-     "test": "craco test"
+    "build": "craco build",
+    "test": "craco test",
+    "predeploy": "craco build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -40,6 +43,7 @@
   "main": "index.js",
   "devDependencies": {
     "autoprefixer": "^9.8.6",
+    "gh-pages": "^3.2.3",
     "postcss": "^7.0.36",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.7"
   },
