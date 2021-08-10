@@ -1,6 +1,6 @@
 {
   "name": "feddupnew",
-  "homepage": "http://saisashreek5thdt.github.io/feddupnew_api",
+  "homepage": "https://saisashreek5thdt.github.io/feddupnew_api/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -18,7 +18,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "predeploy": "craco build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
