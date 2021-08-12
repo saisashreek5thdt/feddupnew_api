@@ -13,9 +13,13 @@ const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 const Token =require("../models/token");
 
+
+//http://localhost:3030/api/v1/signup/
+
 router.post(
     "/signup",
     async (req, res) => {
+      console.log(req.body.fullName, req.body.password,"singnuo",req.body)
         const {
             fullName,
             email,
@@ -48,6 +52,7 @@ router.post(
             user.password = await bcrypt.hash(password, salt);
             user.save(function (err) {
               if (err) { 
+                console.log("error 55",err)
                 return res.status(500).send({msg:err.message});
               }
               
@@ -55,6 +60,7 @@ router.post(
               var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
               token.save(function (err) {
                 if(err){
+                  console.log("error 62",err)
                   return res.status(500).send({msg:err.message});
                 }
   
@@ -71,21 +77,24 @@ router.post(
                   const smtpTransport = nodemailer.createTransport({
                     service: "Gmail",
                     auth: {
-                        user: "write your email",
-                        pass: "your password"
+                      user: "write your email",
+                      pass: "your password"
                     }
-                });
-                  var mailOptions = { from: 'mailtosonam123@gmail.com', to: user.email, subject: 'Account Verification Link', text: 'Hello '+ user.fullName +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api/v1/confirmation\/' + user.email + '\/' + token.token + '\n\nThank You!\n' };
-                  smtpTransport.sendMail(mailOptions, function (err) {
-                      if (err) { 
-                          return res.status(500).send({msg:'Technical Issue!, Please click on resend for verify your Email.'});
-                       }
-                      return res.status(200).send('A verification email has been sent to ' + user.email + '. It will be expire after one day. If you not get verification Email click on resend token.');
                   });
+                  // var mailOptions = { from: 'mailtosonam123@gmail.com', to: user.email, subject: 'Account Verification Link', text: 'Hello '+ user.fullName +',\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/api/v1/confirmation\/' + user.email + '\/' + token.token + '\n\nThank You!\n' };
+                  // smtpTransport.sendMail(mailOptions, function (err) {
+                  //     if (err) { 
+                  //       console.log("error 87",err)
+                  //         return res.status(500).send({msg:'Technical Issue!, Please click on resend for verify your Email.'});
+                  //      } else {
+                  //       return res.status(200).send('A verification email has been sent to ' + user.email + '. It will be expire after one day. If you not get verification Email click on resend token.');
+                  //      }
+                  // });
+                  return res.status(200).send('A verification email has been sent to ' + user.email + '. It will be expire after one day. If you not get verification Email click on resend token.');
               });
             });
         } catch (err) {
-            console.log(err.message);
+            console.log(err.message,"line 7800");
             res.status(500).send("Error in Saving");
         }
     }
@@ -93,6 +102,7 @@ router.post(
 
 router.get('/confirmation/:email/:token',confirmEmail)
 
+//http://localhost:3030/api/v1/signin/
 
 router.post(
     "/login",

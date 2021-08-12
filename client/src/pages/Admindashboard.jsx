@@ -1,13 +1,11 @@
-import react, { Component } from "react";
+import React from 'react';
 
-class Admindashboard extends Component {
-    render () {
-        return (
-            <div>
-                <h3>This is Admin Dashboard</h3>
-            </div>
-        )
-    }
+const Admindashboard = ({history}) => {
+    return(
+        <div>
+            <h1>This is Admin Dasboard</h1>
+        </div>
+    )
 }
 
-export default Admindashboard;
+export default Admindashboard

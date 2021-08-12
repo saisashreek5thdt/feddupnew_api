@@ -16,69 +16,117 @@ import linkedin from '../assets/images/linkedin.svg'
 import twitter from '../assets/images/twitter.svg'
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import axios from "axios";
 
 class Signup extends Component {
+  
     state = {
         isRegistered: false,
-        user: {},
+        user: {
+          "fullName": "",
+          "email": "",
+          "password": "",
+          "ipAddress": "",
+          "os": "",
+          "network": "",
+          "browser": ""
+        },
         errors:{}
       };
+
+      handleChange = event => {
+        this.setState({fullName: event.target.value });
+        this.setState({email: event.target.value});
+        this.setState({password: event.target.value});
+        this.setState({ipAddress: event.target.value});
+        this.setState({os: event.target.value});
+        this.setState({network: event.target.value});
+        this.setState({browser: event.target.value});
+      }
+
+      handleSubmit = event => {
+        event.preventDefault();
     
-      validate=()=>{
-      let user = this.state.user;
-      let errors = {};
-      let isValid = true;
-      if (!user["name"]) {
-        isValid = false;
-        errors["name"] = "Please enter your name.";
+        const user = {
+          fullName: this.state.fullName,
+          email: this.state.email,
+          password: this.state.password,
+          ipAddress: this.state.ipAddress,
+          os: this.state.os,
+          network: this.state.network,
+          browser: this.state.browser
+        };
+    
+        axios.post(`http://localhost:3030/api/v1/signup`, { user })
+          .then(res => {
+            console.log(res);
+            console.log(res.data);
+          })
+          this.setState({fullName: '', 
+                         email: '',
+                         password: '',
+                         ipAddress: '',
+                         os: '',
+                         network: '',
+                         browser: '' 
+                    })
       }
+    
+      // validate(){
+      // let user = this.state.user;
+      // let errors = {};
+      // let isValid = true;
+      // if (!user["name"]) {
+      //   isValid = false;
+      //   errors["name"] = "Please enter your name.";
+      // }
   
-      if (!user["email"]) {
-        isValid = false;
-        errors["email"] = "Please enter your email Address.";
-      }
+      // if (!user["email"]) {
+      //   isValid = false;
+      //   errors["email"] = "Please enter your email Address.";
+      // }
   
-      if (!user["password"]) {
-        isValid = false;
-        errors["password"] = "Please enter your password.";
-      }
+      // if (!user["password"]) {
+      //   isValid = false;
+      //   errors["password"] = "Please enter your password.";
+      // }
   
-      if (!user["confirmPassword"]) {
-        isValid = false;
-        errors["confirm_password"] = "Please enter your confirm password.";
-      }
+      // if (!user["confirmPassword"]) {
+      //   isValid = false;
+      //   errors["confirm_password"] = "Please enter your confirm password.";
+      // }
    
-        if (user["password"] !==user["confirmPassword"]) {
-          isValid = false;
-          errors["password"] = "Passwords don't match.";
-        }
-        this.setState({
-            errors: errors
-          });
+      //   if (user["password"] !==user["confirmPassword"]) {
+      //     isValid = false;
+      //     errors["password"] = "Passwords don't match.";
+      //   }
+      //   this.setState({
+      //       errors: errors
+      //     });
       
-          return isValid;
-      } 
+      //     return isValid;
+      // } 
     
-      register = async () => {
-        if(validate()){
-        let newData = await axios
-        .post('http://localhost:3030/api/v1/signup', this.state.user)
-        .then((response) => response.data)
-        .catch(() => false);
-        console.log(newData)
-        const { user, msg } = newData
-        if (user) {
-          this.setState({
-            isRegistered: true,
-          });
-        } else {
-          this.setState({
-            ...this.state,
-            text: msg,
-          });
-        }
-      }
-    };
+      // register = async () => {
+      //   if(this.validate()){
+      //   let newData = await axios
+      //   .post('http://localhost:3030/api/v1/signup', this.state.user)
+      //   .then((response) => response.data)
+      //   .catch(() => false);
+      //   console.log(newData)
+      //   const { user, msg } = newData
+      //   if (user) {
+      //     this.setState({
+      //       isRegistered: true,
+      //     });
+      //   } else {
+      //     this.setState({
+      //       ...this.state,
+      //       text: msg,
+      //     });
+      //   }
+      // }
+    // };
     
       onChange = (e) => {
         this.setState({
@@ -105,26 +153,26 @@ class Signup extends Component {
                         <div className={['flex justify-center']}>
                             <img src={Registerusericon} alt="" className={['sm:scale-50 transform lg:scale-75']} />
                         </div>
-                        <form className={[""]}>
+                        <form className={[""]} onSubmit={this.handleSubmit}>
                         <span className="badge bg-dark mt-4">{this.state.text}</span>
                             <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4']}>
                                 <img src={usericon} alt="" className={['mr-5 transform']} />
-                                <input type="text" name="fullName" id="" placeholder="Fullname" className={["bg-transparent w-full focus:outline-none border-0"]} onChange={this.onChange}/>
+                                <input type="text" name="fullName" id="" placeholder="Fullname" className={["bg-transparent w-full focus:outline-none border-0"]} value={this.state.fullName} onChange={this.handleChange}/>
                                 <div className="text-danger">{this.state.errors.fullName}</div>
                             </div>
                             <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4']}>
                                 <img src={emailicon} alt="" className={['mr-5 transform scale-75']} />
-                                <input type="text" name="email" id="" placeholder="Email" className={["bg-transparent w-full focus:outline-none border-0"]} onChange={this.onChange}/>
+                                <input type="text" name="email" id="" placeholder="Email" className={["bg-transparent w-full focus:outline-none border-0"]} value={this.state.email} onChange={this.handleChange}/>
                                 <div className="text-danger">{this.state.errors.email}</div>
                             </div>
                             <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4']}>
                                 <img src={passwordicon} alt="" className={['mr-5 transform scale-75']} />
-                                <input type="text" name="password" id="" placeholder="Password" className={["bg-transparent w-full focus:outline-none border-0"]} onChange={this.onChange}/>
+                                <input type="text" name="password" id="" placeholder="Password" className={["bg-transparent w-full focus:outline-none border-0"]} value={this.state.password} onChange={this.handleChange}/>
                                 <div className="text-danger">{this.state.errors.password}</div>
                             </div>
                             <div className={['flex border py-4 px-5 rounded rounded-full mb-10 sm:py-2 sm:mb-6 lg:py-3 lg:mb-8 2xl:py-4']}>
                                 <img src={passwordicon} alt="" className={['mr-5 transform scale-75']} />
-                                <input type="text" name="confirmPassword" id="" placeholder="Re-Password"onChange={this.onChange} className={["bg-transparent w-full focus:outline-none border-0"]} />
+                                <input type="text" name="confirmPassword" id="" placeholder="Re-Password" value={this.state.password} onChange={this.handleChange} className={["bg-transparent w-full focus:outline-none border-0"]} />
                                 <div className="text-danger">{this.state.errors.confirmPassword}</div>
                             </div>
                             <div className={['flex justify-center mt-16 sm:mt-8']}>
